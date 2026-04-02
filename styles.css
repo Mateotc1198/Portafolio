@@ -1,0 +1,642 @@
+:root {
+  --bg: #07111f;
+  --bg-soft: #0d1b2d;
+  --panel: rgba(10, 25, 47, 0.82);
+  --panel-strong: rgba(15, 35, 62, 0.95);
+  --line: rgba(148, 163, 184, 0.18);
+  --text: #e5eef8;
+  --muted: #97abc4;
+  --accent: #7dd3fc;
+  --accent-strong: #f59e0b;
+  --shadow: 0 30px 80px rgba(2, 6, 23, 0.45);
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --max-width: 1160px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Manrope", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(125, 211, 252, 0.15), transparent 32%),
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.16), transparent 25%),
+    linear-gradient(180deg, #08111e 0%, #07111f 50%, #091423 100%);
+  color: var(--text);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black, transparent 82%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Background Animated Orbs */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  z-index: -2;
+  animation: floatOrb 22s infinite ease-in-out alternate;
+  opacity: 0.25;
+}
+
+.orb-1 {
+  width: 450px;
+  height: 450px;
+  background: var(--accent);
+  top: -150px;
+  left: -150px;
+}
+
+.orb-2 {
+  width: 550px;
+  height: 550px;
+  background: var(--accent-strong);
+  bottom: -200px;
+  right: -150px;
+  animation-duration: 26s;
+  animation-delay: -5s;
+}
+
+.orb-3 {
+  width: 350px;
+  height: 350px;
+  background: #38bdf8;
+  top: 40%;
+  left: 30%;
+  animation-duration: 30s;
+  animation-delay: -12s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(40px, 60px) scale(1); }
+}
+
+/* Typing Effect */
+.typing-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.1em;
+  background-color: var(--accent);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blinkCursor 1s step-end infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.site-shell {
+  width: min(calc(100% - 32px), var(--max-width));
+  margin: 0 auto;
+  padding: 18px 0 36px;
+}
+
+.topbar {
+  position: sticky;
+  top: 16px;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(7, 17, 31, 0.75);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #38bdf8);
+  color: #082032;
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.nav a:hover,
+.nav a:focus-visible {
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.section {
+  margin-bottom: 18px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.75fr);
+  gap: 16px;
+  align-items: stretch;
+  min-height: 62vh;
+}
+
+.hero-copy,
+.hero-panel,
+.about-card,
+.github-card,
+.contact-card,
+.tech-card,
+.project-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: var(--panel-strong);
+  backdrop-filter: blur(12px);
+  transform-style: preserve-3d;
+}
+
+.hero-copy {
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-panel {
+  padding: 24px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.eyebrow,
+.panel-label {
+  margin: 0 0 10px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: "Sora", sans-serif;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 6vw, 5.3rem);
+  line-height: 0.96;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin-top: 6px;
+}
+
+.hero-role {
+  margin: 14px 0 6px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.hero-specialty,
+.hero-description,
+.about-card p,
+.github-description,
+#contact-text,
+.project-description,
+.tech-card p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.hero-specialty,
+.hero-description {
+  max-width: 62ch;
+}
+
+.hero-actions,
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent-strong), #fcd34d);
+  color: #1f2937;
+}
+
+.secondary-button {
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  color: var(--text);
+  background: rgba(125, 211, 252, 0.08);
+}
+
+.ghost-button {
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: transparent;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.ghost-button:hover,
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.ghost-button:focus-visible {
+  transform: translateY(-2px);
+}
+
+.highlight-list,
+.github-checklist,
+.project-stack {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-photo-wrap {
+  position: relative;
+  width: min(100%, 250px);
+  margin: 0 auto;
+}
+
+.hero-photo-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 30px;
+  background:
+    linear-gradient(145deg, rgba(125, 211, 252, 0.18), rgba(245, 158, 11, 0.14)),
+    rgba(148, 163, 184, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.12);
+}
+
+.hero-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5.4;
+  object-fit: cover;
+  object-position: center 10%;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.34);
+  background: #dfe5eb;
+}
+
+.hero-panel-content {
+  padding-top: 4px;
+}
+
+.highlight-list li,
+.github-checklist li {
+  position: relative;
+  padding-left: 22px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.highlight-list li + li,
+.github-checklist li + li {
+  margin-top: 10px;
+}
+
+.highlight-list li::before,
+.github-checklist li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.section-heading {
+  margin-bottom: 16px;
+}
+
+.about-card,
+.github-card,
+.contact-card {
+  padding: 22px;
+  border-radius: var(--radius-lg);
+}
+
+.about-card p {
+  margin: 0;
+}
+
+.about-card p + p {
+  margin-top: 12px;
+}
+
+.tech-grid,
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.tech-card,
+.project-card {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+}
+
+.tech-card h3,
+.project-card h3 {
+  margin-bottom: 12px;
+  font-size: 1.15rem;
+}
+
+.pill-group,
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.pill-group span,
+.project-stack li {
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+  color: #dce7f5;
+  font-size: 0.92rem;
+}
+
+.project-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.project-links a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.project-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.project-shot {
+  margin: 0;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.project-shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.project-shot figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.github-card,
+.contact-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.mail-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity 700ms ease,
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-copy,
+.hero-panel,
+.tech-card,
+.project-card,
+.about-card,
+.github-card,
+.contact-card {
+  transition:
+    transform 400ms ease,
+    border-color 400ms ease,
+    box-shadow 400ms ease,
+    background 400ms ease;
+}
+
+/* Base hover if not using JS tilt */
+.hero-copy:hover,
+.hero-panel:hover,
+.tech-card:hover,
+.project-card:hover,
+.about-card:hover,
+.github-card:hover,
+.contact-card:hover {
+  border-color: rgba(125, 211, 252, 0.35);
+  box-shadow: 0 26px 60px rgba(2, 6, 23, 0.5);
+}
+
+.tech-card,
+.project-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.tech-card::after,
+.project-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -60% auto;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(125, 211, 252, 0.12), transparent 68%);
+  pointer-events: none;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button,
+.project-links a,
+.mail-link {
+  position: relative;
+}
+
+.primary-button::after,
+.secondary-button::after,
+.ghost-button::after,
+.project-links a::after,
+.mail-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms ease;
+  opacity: 0.7;
+}
+
+.project-links a:hover::after,
+.mail-link:hover::after,
+.project-links a:focus-visible::after,
+.mail-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.ghost-button:hover,
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.ghost-button:focus-visible {
+  transform: translateY(-2px) scale(1.01);
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .tech-grid,
+  .projects-grid,
+  .project-gallery,
+  .github-card,
+  .contact-card {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .topbar {
+    border-radius: 28px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero-photo-wrap {
+    width: min(100%, 220px);
+  }
+
+  .nav {
+    justify-content: flex-start;
+  }
+
+  .section,
+  .hero-copy,
+  .hero-panel,
+  .about-card,
+  .github-card,
+  .contact-card,
+  .tech-card,
+  .project-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-shell {
+    width: min(calc(100% - 20px), var(--max-width));
+    padding-top: 12px;
+  }
+
+  .nav {
+    gap: 12px;
+  }
+
+  h1 {
+    font-size: 2.7rem;
+  }
+
+  .hero-role {
+    font-size: 1.1rem;
+  }
+}
