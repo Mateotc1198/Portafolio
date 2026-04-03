@@ -66,20 +66,33 @@ const portfolioData = {
   ],
   projects: [
     {
-      title: "React E-commerce Minimalist",
+      title: "E-commerce MT",
       description:
-        "Tienda interactiva SPA construida con React utilizando Local State Management no trivial. Emplea un diseño 'Premium Minimalist' (Light Mode) con una página navegable de detalles del producto (PDP), manejo de carrito con cajón lateral (Drawer) deslizante y consumo dinámico de datos de APIs.",
+        "Tienda construida con React utilizando con una página navegable de detalles del producto (PDP), manejo de carrito con cajón lateral (Drawer) deslizante y consumo dinámico de datos de APIs.",
       stack: ["React", "JavaScript", "API Fetch", "CSS3"],
-      demo: "ecommerce-demo/index.html",
-      repo: "https://github.com/Mateotc1198/Portafolio/tree/main/ecommerce-demo",
-      screenshots: [],
+      demo: "https://mateotc1198.github.io/E-Commerse/",
+      repo: "https://github.com/Mateotc1198/E-Commerse",
+      screenshots: [
+        {
+          title: "Catálogo General",
+          src: "ecommerce-demo/screenshots/grid-view.png",
+        },
+        {
+          title: "Detalles del Producto (PDP)",
+          src: "ecommerce-demo/screenshots/pdp-view.png",
+        },
+        {
+          title: "Cajón del Carrito",
+          src: "ecommerce-demo/screenshots/cart-drawer.png",
+        }
+      ],
     },
     {
       title: "Casa Blanca",
       description:
         "Aplicación web de reservas hoteleras desarrollada con ASP.NET MVC 5, C# y SQL Server. Permite registrar usuarios, iniciar sesión, consultar hoteles disponibles, crear reservas y administrar el catálogo de hoteles desde un panel administrativo.",
-      stack: ["ASP.NET MVC 5", "C#", "SQL Server", "HTML", "CSS", "JavaScript"],
-      demo: "",
+      stack: ["ASP.NET MVC 5", "C#", "SQL Server"],
+      demo: "https://mateotc1198.github.io/CasaBlanca/",
       repo: "https://github.com/Mateotc1198/CasaBlanca",
       screenshots: [
         {
@@ -131,7 +144,7 @@ function setTextContent(id, value) {
 
 function renderHero() {
   setTextContent("hero-name", portfolioData.hero.name);
-  
+
   const roleEl = document.getElementById("hero-role");
   if (roleEl) {
     roleEl.innerHTML = "";
@@ -140,7 +153,7 @@ function renderHero() {
     cursorSpan.className = "typing-cursor";
     roleEl.appendChild(textSpan);
     roleEl.appendChild(cursorSpan);
-    
+
     let i = 0;
     const txt = portfolioData.hero.role;
     const speed = 70;
@@ -255,10 +268,9 @@ function renderProjects() {
         ${project.stack.map((item) => `<li>${item}</li>`).join("")}
       </ul>
       ${links.length ? `<div class="project-links">${links.join("")}</div>` : ""}
-      ${
-        screenshotsMarkup
-          ? `<div class="project-gallery">${screenshotsMarkup}</div>`
-          : ""
+      ${screenshotsMarkup
+        ? `<div class="project-gallery">${screenshotsMarkup}</div>`
+        : ""
       }
     `;
     projectsGrid.appendChild(article);
@@ -369,4 +381,3 @@ renderGithub();
 renderContact();
 setupRevealAnimations();
 setupTiltEffect();
-
