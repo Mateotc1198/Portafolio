@@ -66,6 +66,15 @@ const portfolioData = {
   ],
   projects: [
     {
+      title: "React E-commerce Minimalist",
+      description:
+        "Tienda interactiva SPA construida con React utilizando Local State Management no trivial. Emplea un diseño 'Premium Minimalist' (Light Mode) con una página navegable de detalles del producto (PDP), manejo de carrito con cajón lateral (Drawer) deslizante y consumo dinámico de datos de APIs.",
+      stack: ["React", "JavaScript", "API Fetch", "CSS3"],
+      demo: "ecommerce-demo/index.html",
+      repo: "https://github.com/Mateotc1198/Portafolio/tree/main/ecommerce-demo",
+      screenshots: [],
+    },
+    {
       title: "Casa Blanca",
       description:
         "Aplicación web de reservas hoteleras desarrollada con ASP.NET MVC 5, C# y SQL Server. Permite registrar usuarios, iniciar sesión, consultar hoteles disponibles, crear reservas y administrar el catálogo de hoteles desde un panel administrativo.",
@@ -360,3 +369,4 @@ renderGithub();
 renderContact();
 setupRevealAnimations();
 setupTiltEffect();
+
