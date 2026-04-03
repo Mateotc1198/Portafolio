@@ -75,15 +75,15 @@ const portfolioData = {
       screenshots: [
         {
           title: "Catálogo General",
-          src: "ecommerce-demo/screenshots/grid-view.png",
+          src: "https://raw.githubusercontent.com/Mateotc1198/E-Commerse/main/assets/screenshots/grid-view.png",
         },
         {
           title: "Detalles del Producto (PDP)",
-          src: "ecommerce-demo/screenshots/pdp-view.png",
+          src: "https://raw.githubusercontent.com/Mateotc1198/E-Commerse/main/assets/screenshots/pdp-view.png",
         },
         {
           title: "Cajón del Carrito",
-          src: "ecommerce-demo/screenshots/cart-drawer.png",
+          src: "https://raw.githubusercontent.com/Mateotc1198/E-Commerse/main/assets/screenshots/cart-drawer.png",
         }
       ],
     },
