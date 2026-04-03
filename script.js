@@ -75,7 +75,7 @@ const portfolioData = {
       screenshots: [
         {
           title: "Catálogo General",
-          src: "https://raw.githubusercontent.com/Mateotc1198/E-Commerse/main/assets/screenshots/grid-view.png",
+          src: "https://github.com/Mateotc1198/E-Commerse/blob/main/assets/screenshots/cart-drawer.png?raw=true",
         },
         {
           title: "Detalles del Producto (PDP)",
