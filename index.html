@@ -8,14 +8,14 @@
   <meta name="description"
     content="Software Engineer focusado en interfaces premium, arquitectura escalable y soluciones digitales minimalistas." />
 
-  <!-- Tipografías de Google Fonts -->
+  <!-- Fuentes: Conexión con Google Fonts para tipografía personalizada -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
     rel="stylesheet" />
 
-  <!-- Iconos de tecnologías (Devicon) y Phosphor Icons -->
+  <!-- Iconos: Librerías para los iconos de tecnologías (Devicon y Phosphor) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -25,17 +25,17 @@
 <body>
 
 
-  <!-- Barra de progreso de lectura -->
+  <!-- Barra de progreso: Aparece en la parte superior al hacer scroll -->
   <div class="scroll-progress-container">
     <div class="scroll-progress-bar"></div>
   </div>
 
-  <!-- Fondo dinámico con efectos de brillo, partículas y mallas -->
+  <!-- Fondo con Brillos Ambientales: Capas visuales decorativas y canvas de partículas -->
   <div class="bg-glows">
     <div class="noise-overlay"></div>
-    <!-- Canvas para la red de partículas interactiva -->
+    <!-- Constelación de partículas: Fondo interactivo renderizado en Canvas -->
     <canvas class="particle-canvas" id="particle-canvas"></canvas>
-    <!-- Capas con efecto de gradiente Aurora dinámico -->
+    <!-- Capas de Aurora: Efectos de luces suaves que se mueven en el fondo -->
     <div class="aurora-layer">
       <div class="aurora aurora-1"></div>
       <div class="aurora aurora-2"></div>
@@ -67,7 +67,7 @@
     </header>
 
     <main>
-      <!-- HERO (ASIMÉTRICO) -->
+      <!-- SECCIÓN HERO: Presentación principal con diseño asimétrico -->
       <section class="hero section" id="inicio">
         <div class="hero-layout">
           <div class="hero-copy">
@@ -90,52 +90,51 @@
         </div>
       </section>
 
-      <!-- SOBRE MÍ & STATS (STAGGERED) -->
-      <!-- SOBRE MÍ & STATS (ESCALONADOS) -->
+      <!-- SECCIÓN SOBRE MÍ: Información personal y cuadrícula tipo Bento -->
       <section class="section about-section" id="sobre-mi">
         <div class="about-grid">
           <div class="about-content reveal-item">
             <p class="eyebrow">01 / Sobre mí</p>
             <h2 class="section-title">Sobre mí</h2>
             <div id="about-text-container">
-              <!-- El párrafo de descripción se inyecta desde script.js -->
+              <!-- El contenido de texto se inyecta dinámicamente desde script.js -->
             </div>
           </div>
           <div class="about-bento" id="about-bento-grid">
-            <!-- La cuadrícula Bento se inyecta desde script.js -->
+            <!-- La cuadrícula Bento se genera dinámicamente desde script.js -->
           </div>
         </div>
       </section>
 
-      <!-- TECH STACK (Herramientas preferidas) -->
+      <!-- STACK TECNOLÓGICO: Cuadrícula con iconos de herramientas (Diseño minimalista) -->
       <section class="section tech-section" id="tecnologias">
         <div class="section-header reveal-item">
           <p class="eyebrow">02 / Tech</p>
           <h2 class="section-title">Herramientas preferidas</h2>
         </div>
         <div class="tech-grid-layout" id="tech-categories">
-          <!-- Las categorías de tecnología se inyectan desde script.js -->
+          <!-- Los grupos tecnológicos se inyectan dinámicamente desde script.js -->
         </div>
       </section>
 
-      <!-- PROYECTOS (HORIZONTAL/OFFSET) -->
+      <!-- SECCIÓN PROYECTOS: Lista de trabajos destacados con diseño alternado -->
       <section class="section projects-section" id="proyectos">
         <div class="section-header reveal-item">
           <p class="eyebrow">03 / Trabajos</p>
           <h2 class="section-title">Proyectos destacados</h2>
         </div>
         <div class="projects-staggered" id="projects-list">
-          <!-- La lista de proyectos se genera dinámicamente mediante script.js -->
+          <!-- Las tarjetas de proyectos se inyectan dinámicamente desde script.js -->
         </div>
       </section>
 
-      <!-- CONTACTO -->
+      <!-- SECCIÓN CONTACTO: Llamada a la acción final con diseño de tarjeta premium -->
       <section class="section contact-section" id="contacto">
         <div class="contact-wrap reveal-item">
           <div class="contact-main">
             <h2 class="contact-heading reveal-item">¿Construimos algo juntos?</h2>
             <div class="contact-buttons" id="contact-links">
-              <!-- Los enlaces de contacto se inyectan desde script.js -->
+              <!-- Los botones de contacto social se inyectan dinámicamente desde script.js -->
             </div>
           </div>
           <footer class="footer">
@@ -146,10 +145,10 @@
     </main>
   </div>
 
-  <!-- Librerías de animación (GSAP) y script de lógica principal -->
+  <!-- Scripts: Librerías de animación (GSAP) y lógica del sitio -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="script.js"></script>
 </body>
 
-</html>
+</html>v
