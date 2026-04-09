@@ -1,7 +1,7 @@
-//1. REGISTRO DE PLUGINS (una sola vez, al nivel de módulo) 
+// ─── 1. REGISTRO DE PLUGINS (Se hace una sola vez para evitar errores) ────────────
 gsap.registerPlugin(ScrollTrigger);
 
-//2. DATOS 
+// ─── 2. DATOS DEL PORTAFOLIO (Fuente de verdad centralizada) ───────────────────
 const portfolioData = {
   about: {
     description: [
@@ -57,7 +57,7 @@ const portfolioData = {
       title: "MT-Store",
       tagline: "Tienda virtual de tenis para hombre y mujer.",
       stack: ["Javascript", "GSAP", "Firebase", "Vite"],
-      image: "assets/screenshots/mt-store.png",
+      image: "MT-Store.png",
       repo: "https://github.com/Mateotc1198/MT-Store"
     },
     {
@@ -78,6 +78,7 @@ const portfolioData = {
       repo: "#"
     }
   ],
+  // Datos de contacto para inyección dinámica
   contact: {
     email: "Mateotorres.cardona@gmail.com",
     socials: [
@@ -86,12 +87,13 @@ const portfolioData = {
   }
 };
 
-//3. CONFIGURACIÓN GLOBAL POR DEFECTO 
+/* ─── 3. CONFIGURACIÓN GLOBAL DE GSAP ───────────────────────────────────── */
 gsap.defaults({ ease: "power2.out", duration: 0.8 });
 
-//4. RENDIMIENTO: Patrón Singleton para la posición del ratón 
-//Un único listener de mousemove para todo el sitio.
-//Todos los sistemas consultan este objeto en lugar de registrar N listeners. 
+/* ─── RENDIMIENTO: Patrón Singleton para la posición del ratón ─────────────
+   Se usa un solo "listener" de mousemove para todo el sitio.
+   Esto evita que múltiples elementos escuchen el evento por separado,
+   ahorrando recursos del procesador significativamente. ─────────────────── */
 const mouse = { x: -9999, y: -9999, moved: false };
 let mouseHandlers = [];
 
@@ -101,7 +103,7 @@ window.addEventListener("mousemove", (e) => {
   mouse.moved = true;
 }, { passive: true });
 
-// Procesa todos los manejadores en un único tick (GSAP Ticker) para evitar N listeners duplicados
+// Procesar todas las funciones registradas en un solo "tick" — evita duplicar procesos
 gsap.ticker.add(() => {
   if (!mouse.moved) return;
   mouse.moved = false;
@@ -110,12 +112,13 @@ gsap.ticker.add(() => {
   }
 });
 
-//4. BACKGROUND & AMBIENTE 
+/* ─── 4. EFECTOS ESPECIALES DE FONDO ──────────────────────────────────── */
 
 function initGlows() {
   const glows = gsap.utils.toArray('.glow');
   glows.forEach((glow, i) => {
-    // Promueve el elemento a una capa de GPU una vez; luego solo anima transformaciones y opacidad
+    // ✅ Promovemos el elemento a una capa de GPU al inicio 
+    // Luego solo animamos transformaciones y opacidad para máxima fluidez.
     gsap.set(glow, { force3D: true });
     gsap.to(glow, {
       x: () => (Math.random() - 0.5) * 600,
@@ -136,19 +139,19 @@ function initGlows() {
   });
 }
 
-//4b. RED DE PARTÍCULAS INTERACTIVA
+/* ─── 4b. CONSTELACIÓN DE PARTÍCULAS INTERACTIVAS (OPTIMIZADA) ────────── */
 function initParticleCanvas() {
   const canvas = document.getElementById('particle-canvas');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });
   const isMobile = window.innerWidth < 768;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2); // Limitamos a 2x para no saturar la GPU en pantallas Retina
 
   const CFG = {
-    count: isMobile ? 25 : 65,
+    count: isMobile ? 25 : 65,          // ✅ El número de partículas varía según la potencia del dispositivo
     linkDist: isMobile ? 90 : 130,
-    linkDistSq: 0,
+    linkDistSq: 0,                       // ✅ Distancia de conexión pre-calculada al cuadrado (más rápido)
     speed: 0.3,
     rMin: 0.8, rMax: 2.2,
     repelR: 150, repelRSq: 0, repelF: 1.4,
@@ -156,14 +159,15 @@ function initParticleCanvas() {
     colorB: '99, 102, 241',
     lineAlpha: 0.18,
     dotAlpha: 0.55,
-    cellSize: 0,
+    cellSize: 0,                         // ✅ Tamaño de celda para la optimización de "Spatial Hash"
   };
   CFG.linkDistSq = CFG.linkDist * CFG.linkDist;
   CFG.repelRSq = CFG.repelR * CFG.repelR;
   CFG.cellSize = CFG.linkDist;
 
   let W, H, particles = [];
-
+  // ✅ Cuadrícula espacial: Optimiza la búsqueda de vecinos para que sea lineal O(n) en lugar de cuadrática O(n²)
+  // Esto permite tener muchas partículas sin que el sitio se ponga lento.
   let grid = {};
   let gridCols = 0, gridRows = 0;
 
@@ -198,11 +202,12 @@ function initParticleCanvas() {
     const mX = mouse.x, mY = mouse.y;
     const maxV = CFG.speed * 2.8;
 
-    // Construcción de la rejilla espacial por cada frame (tick)
+    // ✅ Construcción de la rejilla espacial para optimizar cálculos
     grid = {};
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
+      // Efecto de repulsión del ratón — usamos distancia al cuadrado para no hacer operaciones de raíz cuadrada (lento)
       const dx = p.x - mX, dy = p.y - mY;
       const dSq = dx * dx + dy * dy;
       if (dSq < CFG.repelRSq && dSq > 0) {
@@ -222,6 +227,7 @@ function initParticleCanvas() {
       if (p.y < 0) { p.y = 0; p.vy *= -1; }
       else if (p.y > H) { p.y = H; p.vy *= -1; }
 
+      // Insertar cada partícula en la rejilla para luego buscar solo partículas cercanas
       const col = (p.x / CFG.cellSize) | 0;
       const row = (p.y / CFG.cellSize) | 0;
       const key = col + row * gridCols;
@@ -229,14 +235,15 @@ function initParticleCanvas() {
       grid[key].push(i);
     }
 
-    // Dibujado de líneas usando la rejilla: solo revisa las celdas vecinas inmediatas
-    ctx.lineWidth = 1;
+    // ✅ Dibujar líneas usando la rejilla espacial — solo comparamos con partículas en celdas vecinas
+    ctx.lineWidth = 1; // Definimos el grosor una sola vez antes del bucle para ganar velocidad
     for (let i = 0; i < particles.length; i++) {
       const pi = particles[i];
       const col = (pi.x / CFG.cellSize) | 0;
       const row = (pi.y / CFG.cellSize) | 0;
 
-      // Revisa los 4 vecinos direccionales (derecha, abajo e inferiores) para evitar duplicar comprobaciones de pares
+      // Comprobamos 4 celdas vecinas (derecha, abajo-izq, abajo, abajo-der) 
+      // para evitar procesar la misma pareja de partículas dos veces.
       for (let dc = 0; dc <= 1; dc++) {
         for (let dr = (dc === 0 ? 1 : -1); dr <= 1; dr++) {
           const nc = col + dc;
@@ -262,6 +269,7 @@ function initParticleCanvas() {
           }
         }
       }
+      // También comparamos con partículas dentro de la misma celda
       const ownKey = col + row * gridCols;
       const ownCell = grid[ownKey];
       if (ownCell) {
@@ -283,7 +291,7 @@ function initParticleCanvas() {
       }
     }
 
-    // Dibujado de puntos (nodos) en lote para reducir el número de operaciones en el canvas
+    // ✅ Dibujado por lotes: Pintamos todos los puntos en un solo pase de relleno por color
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
       // Glow halo
@@ -303,7 +311,7 @@ function initParticleCanvas() {
   particles = Array.from({ length: CFG.count }, makeParticle);
   gsap.ticker.add(tick);
 
-  // Redimensionado del canvas controlado con debounce para evitar cálculos pesados excesivos
+  // ✅ Optimized resize (Debounced) to prevent browser saturation
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -311,12 +319,12 @@ function initParticleCanvas() {
   }, { passive: true });
 }
 
-/* ─── 4c. EFECTO AURORA DINÁMICO ───────────────────────────────────────── */
+/* ─── 4c. MOVIMIENTO DE AURORA (Efecto de luces dinámicas) ─────────────── */
 function initAurora() {
   const auroras = gsap.utils.toArray('.aurora');
 
   function driftAurora(el, baseDur, range, opMin, opMax) {
-    // Promover a capa de GPU para evitar repintes del layout principal
+    // ✅ Promote to GPU layer to prevent flickering and lag
     gsap.set(el, { force3D: true });
     function step() {
       gsap.to(el, {
@@ -340,11 +348,11 @@ function initAurora() {
   if (auroras[3]) driftAurora(auroras[3], 20, 20, 0.2, 0.6);
 }
 
-/* ─── 4d. RASTRO DEL CURSOR (OPTIMIZADO) ───────────────────────────────── */
+/* ─── 4d. ESTELA DEL CURSOR (INTERACCIÓN OPTIMIZADA) ───────────────────── */
 function initCursorTrail() {
   if (window.innerWidth < 768) return;
 
-  const TOTAL = 8;  // Cantidad reducida de 12 a 8 para ganar rendimiento
+  const TOTAL = 8;  // Número de puntos en la estela (ajustado para suavidad y rendimiento)
   const trail = [];
 
   for (let i = 0; i < TOTAL; i++) {
@@ -359,7 +367,7 @@ function initCursorTrail() {
       width: size, height: size,
       x: -100, y: -100,
       xPercent: -50, yPercent: -50,
-      force3D: true  // Capa de GPU activada
+      force3D: true  // ✅ GPU layer
     });
 
     trail.push({
@@ -372,7 +380,7 @@ function initCursorTrail() {
 
   let revealed = false;
 
-  // Uso del manejador centralizado de posición del ratón
+  // ✅ Usamos un manejador centralizado de ratón para ahorrar memoria
   mouseHandlers.push((mx, my) => {
     if (!revealed) {
       revealed = true;
@@ -394,13 +402,12 @@ function initCursorTrail() {
   );
 }
 
-/* ─── 4e. GEOMETRÍA DE CRISTAL FLOTANTE ───────────────────────────────── */
 function initGlassGeometry() {
   const container = document.querySelector(".glass-shapes-container");
   if (!container) return;
 
   const isMobile = window.innerWidth < 768;
-  const shapeCount = isMobile ? 3 : 6;  // Reducido de 10 a 6 para mantener 60fps constantes
+  const shapeCount = isMobile ? 3 : 6;  // ✅ Reduced from 4/10
   const shapes = [];
 
   for (let i = 0; i < shapeCount; i++) {
@@ -415,47 +422,49 @@ function initGlassGeometry() {
 
     const startX = Math.random() * window.innerWidth;
     const startY = Math.random() * window.innerHeight;
+
+    gsap.set(shape, {
+      x: startX,
+      y: startY,
+      autoAlpha: 0,
+      scale: 0.8,
+      rotation: Math.random() * 360,
+      force3D: true  // ✅ GPU layer
+    });
+    container.appendChild(shape);
+
+    gsap.to(shape, {
+      autoAlpha: isMobile ? 0.4 : 0.7,
+      scale: 1,
+      duration: 2.5,
+      delay: i * 0.15,
+      ease: "expo.out"
+    });
+
+    shapes.push({
+      el: shape,
+      xTo: gsap.quickTo(shape, "x", { duration: 2, ease: "power2.out" }),
+      yTo: gsap.quickTo(shape, "y", { duration: 2, ease: "power2.out" }),
+      rotTo: gsap.quickTo(shape, "rotation", { duration: 3, ease: "power1.out" }),
+      baseX: startX,
+      baseY: startY,
+      depth: depth
+    });
+
+    gsap.to(shape, {
+      y: `+=${30 + Math.random() * 50}`,
+      x: `+=${20 + Math.random() * 30}`,
+      duration: 4 + Math.random() * 4,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
   }
-  gsap.set(shape, {
-    x: startX,
-    y: startY,
-    autoAlpha: 0,
-    scale: 0.8,
-    rotation: Math.random() * 360,
-    force3D: true  // Forzar renderizado por hardware
-  });
-  container.appendChild(shape);
 
-  gsap.to(shape, {
-    autoAlpha: isMobile ? 0.4 : 0.7,
-    scale: 1,
-    duration: 2.5,
-    delay: i * 0.15,
-    ease: "expo.out"
-  });
-
-  shapes.push({
-    el: shape,
-    xTo: gsap.quickTo(shape, "x", { duration: 2, ease: "power2.out" }),
-    yTo: gsap.quickTo(shape, "y", { duration: 2, ease: "power2.out" }),
-    rotTo: gsap.quickTo(shape, "rotation", { duration: 3, ease: "power1.out" }),
-    baseX: startX,
-    baseY: startY,
-    depth: depth
-  });
-
-  gsap.to(shape, {
-    y: `+=${30 + Math.random() * 50}`,
-    x: `+=${20 + Math.random() * 30}`,
-    duration: 4 + Math.random() * 4,
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut"
-  });
   const gridXTo = gsap.quickTo(".bg-grid", "x", { duration: 2, ease: "power2.out" });
   const gridYTo = gsap.quickTo(".bg-grid", "y", { duration: 2, ease: "power2.out" });
 
-  // Uso del manejador centralizado para el efecto de movimiento (Parallax y seguimiento)
+  // ✅ Manejador centralizado para el efecto de movimiento del fondo (parallax)
   mouseHandlers.push((mx, my) => {
     const halfW = window.innerWidth / 2;
     const halfH = window.innerHeight / 2;
@@ -478,14 +487,14 @@ function initMouseInteractions() {
   const spotlight = document.querySelector('.mouse-spotlight');
   if (!spotlight) return;
 
-  // Uso de transformadas (x/y) en lugar de top/left para evitar el reflujo del diseño (reflow)
+  // ✅ Usamos transform (x/y) en lugar de left/top para aprovechar la aceleración por hardware
   gsap.set(spotlight, { xPercent: -50, yPercent: -50, force3D: true });
   const xTo = gsap.quickTo(spotlight, "x", { duration: 0.8, ease: "power3.out" });
   const yTo = gsap.quickTo(spotlight, "y", { duration: 0.8, ease: "power3.out" });
 
   let spotlightVisible = false;
 
-  // Manejador centralizado para evitar múltiples llamadas a gsap.getProperty() por frame
+  // ✅ Manejador centralizado — evita llamadas costosas a propiedades del DOM en cada frame
   mouseHandlers.push((mx, my) => {
     if (!spotlightVisible) {
       spotlightVisible = true;
@@ -496,20 +505,20 @@ function initMouseInteractions() {
   });
 }
 
-/* ─── 5. GENERACIÓN DINÁMICA DE CONTENIDO (HTML) ──────────────────────── */
+/* ─── 5. RENDERIZACIÓN DINÁMICA DE CONTENIDOS (HTML) ──────────────────── */
 function renderAll() {
-  // Texto de la sección Sobre Mí
+  // Inyectar el texto de la biografía en la sección "Sobre Mí"
   const aboutText = document.getElementById('about-text-container');
   if (aboutText) {
     aboutText.innerHTML = portfolioData.about.description.map(p => `<p>${p}</p>`).join('');
   }
 
-  // Cuadrícula Bento de la sección About
+  // Generar la cuadrícula tipo Bento de la sección "Sobre Mí"
   const bentoGrid = document.getElementById('about-bento-grid');
   if (bentoGrid) {
     let bentoHTML = '';
     portfolioData.about.features.forEach((f, idx) => {
-      const isWide = idx === 2; // La tercera tarjeta es ancha
+      const isWide = idx === 2; // The third card is wide
       bentoHTML += `
         <div class="bento-card ${isWide ? 'card-wide' : 'card-tall'} reveal-item">
           <div class="card-shine"></div>
@@ -521,7 +530,7 @@ function renderAll() {
     bentoGrid.innerHTML = bentoHTML;
   }
 
-  // Sección de Herramientas (Tech Stack)
+  // Generar la sección de Tecnologías agrupadas por categorías
   const techCategories = document.getElementById('tech-categories');
   if (techCategories) {
     techCategories.innerHTML = portfolioData.technologies.map(t => `
@@ -540,7 +549,7 @@ function renderAll() {
     `).join('');
   }
 
-  // Sección de Proyectos Destacados
+  // Generar la lista de proyectos destacados con sus enlaces y stacks
   const projectsList = document.getElementById('projects-list');
   if (projectsList) {
     projectsList.innerHTML = portfolioData.projects.map(p => {
@@ -566,25 +575,25 @@ function renderAll() {
     }).join('');
   }
 
-  // Sección de Contacto y Redes Sociales
+  // Generar botones de contacto y enlaces a redes sociales
   const contactLinks = document.getElementById('contact-links');
   if (contactLinks) {
     contactLinks.innerHTML = portfolioData.contact.socials.map(s => `
       <a href="${s.url}" target="_blank" class="btn btn-outline-white magnetic" data-magnetic>${s.label}</a>
     `).join('');
-    contactLinks.innerHTML += `<a href="mailto:${portfolioData.contact.email}" class="btn btn-white magnetic" data-magnetic>Email directo</a>`;
+    contactLinks.innerHTML += `<a href="mailto:${portfolioData.contact.email}" class="btn btn-white magnetic" data-magnetic>Correo directo</a>`;
   }
 }
 
-/* ─── 6. ANIMACIONES PRINCIPALES ─────────────────────────────────────── */
+/* ─── 6. SISTEMA DE ANIMACIÓN PRINCIPAL (GSAP) ────────────────────────── */
 
-let ctx; // Contexto global de GSAP para gestionar limpiezas automáticas
+let ctx; // Global GSAP Context
 
 function initAnimations() {
   gsap.set('.reveal-item', { autoAlpha: 0, y: 50 });
   gsap.set('.reveal-text', { autoAlpha: 0, y: 30 });
 
-  // ── División de títulos en caracteres individuales (animación tipo reveal) ──
+  // ── División de caracteres para animar títulos letra por letra ───────────
   const titlesToAnimate = gsap.utils.toArray(".hero-title, .section-title");
   titlesToAnimate.forEach(title => {
     const text = title.innerText;
@@ -592,7 +601,7 @@ function initAnimations() {
       `<span class="char">${char === " " ? "&nbsp;" : char}</span>`
     ).join("");
 
-    // Uso exclusivo de opacidad y transformaciones sin filtros de desenfoque por rendimiento
+    // ✅ Usamos solo opacidad y transformaciones — EVITAMOS filter:blur porque obliga al navegador a repintar cada frame (lento)
     gsap.set(title.querySelectorAll(".char"), {
       autoAlpha: 0,
       y: 60,
@@ -600,7 +609,7 @@ function initAnimations() {
     });
   });
 
-  // ── Sección Hero: Línea de tiempo de entrada inicial ──────────────────
+  // ── Hero: Secuencia de entrada coordinada (Timeline) ───────────────────
   const introTl = gsap.timeline({
     defaults: { duration: 1, ease: "power4.out" }
   });
@@ -625,7 +634,7 @@ function initAnimations() {
       ease: "expo.out"
     }, "<0.2");
 
-  // ── Foto Hero: Animación de flotación suave infinita ───────────────────
+  // ── Foto del Hero: Efecto de flotación suave e infinito ──────────────────
   gsap.to(".image-frame", {
     y: -12,
     duration: 3.5,
@@ -635,7 +644,7 @@ function initAnimations() {
     delay: 2
   });
 
-  // ── Títulos de secciones: Animación activada al aparecer con ScrollTrigger ──
+  // ── Títulos de secciones: Aparecen al hacer scroll (ScrollTrigger) ───────
   const sectionTitles = gsap.utils.toArray(".section-title");
   sectionTitles.forEach(title => {
     gsap.to(title.querySelectorAll(".char"), {
@@ -655,7 +664,7 @@ function initAnimations() {
 
 
 
-  // ── Revelado por lotes (Batch) para elementos tipo card/texto ─────────
+  // ── Procesamiento por lotes (Batch): Revelado de tarjetas y elementos ───
   ScrollTrigger.batch(".reveal-item", {
     onEnter: (elements) => gsap.to(elements, {
       autoAlpha: 1,
@@ -669,7 +678,7 @@ function initAnimations() {
     once: true
   });
 
-  // ── Efecto parallax fluido en las imágenes de cada proyecto ───────────
+  // ── Efecto Parallax en las imágenes de los proyectos (movimiento al desplazar) ──
   gsap.utils.toArray(".project-img").forEach(img => {
     gsap.fromTo(img,
       { scale: 1.15, y: 0 },
@@ -687,11 +696,10 @@ function initAnimations() {
     );
   });
 
-  // ── Barra de progreso vinculada a la profundidad del scroll ───────────
+  // ── Barra de progreso de lectura (Scroll Progress) ─────────────────────
   const progressBar = document.querySelector(".scroll-progress-bar");
   if (progressBar) {
-    // Uso de scaleX en lugar de width para transformar por hardware
-    gsap.set(progressBar, { transformOrigin: "left center", scaleX: 0 });
+    // ✅ Usamos scaleX en lugar de width — Es procesado por la GPU para mayor suavidad y no afecta al diseño (layout)
     gsap.set(progressBar, { transformOrigin: "left center", scaleX: 0 });
     ScrollTrigger.create({
       start: "top top",
@@ -702,7 +710,7 @@ function initAnimations() {
     });
   }
 
-  // ── Comportamiento de la cabecera (Header) al hacer scroll ────────────
+  // ── Cabecera pegajosa (Sticky Header): Cambia de aspecto al bajar ───────
   ScrollTrigger.create({
     start: "top -40",
     onToggle: self => {
@@ -719,7 +727,7 @@ function initAnimations() {
   });
 }
 
-/* ─── 7. INTERACCIONES INTERACTIVAS (HOVER / RATÓN) ─────────────────── */
+/* ─── 7. INTERACCIONES AVANZADAS (RATÓN Y HOVER) ──────────────────────── */
 
 function initTiltEffect() {
   const cards = gsap.utils.toArray('.bento-card, .tech-group, .project-info');
@@ -785,6 +793,7 @@ function initTechCardInteractions() {
     'react': 'var(--clr-react)',
     'javascript': 'var(--clr-js)',
     'typescript': 'var(--clr-ts)',
+    /* ✅ Hint al compositor: Mejora el rendimiento del renderizado de iconos */
     'html5': 'var(--clr-html)',
     'css3': 'var(--clr-css)',
     'c#': 'var(--clr-csharp)',
@@ -812,7 +821,9 @@ function initTechCardInteractions() {
   });
 }
 
-/* ─── 8. ANIMACIONES DE HOVER EN TARJETAS ────────────────────────────── */
+/* ─── 8. PRELOADER ────────────────────────────────────────────────────── */
+
+/* ─── 8b. ANIMACIONES DE HOVER EN TARJETAS (BRILLO Y TILT) ─────────────── */
 
 function initCardHoverAnimations() {
 
@@ -893,6 +904,7 @@ function initCardHoverAnimations() {
     }
 
     if (label) {
+      // Movimiento sutil del texto hacia arriba para dar efecto de relieve
       tl.to(label, {
         y: -4,
         letterSpacing: '0.1em',
@@ -911,7 +923,7 @@ function initCardHoverAnimations() {
     });
   });
 
-  /* ══ PROJECT CARDS ════════════════════════════════════════════════════ */
+/* ══ TARJETAS DE PROYECTOS: Interacciones individuales ═══════════════ */
   gsap.utils.toArray('.project-card').forEach(card => {
     const imageWrap = card.querySelector('.project-image-wrap');
     const num = card.querySelector('.project-num');
@@ -983,7 +995,7 @@ function initCardHoverAnimations() {
     group.addEventListener('mouseleave', () => tl.reverse());
   });
 
-  /* ══ NAVEGACIÓN ═══════════════════════════════════════════════════════ */
+  /* ══ NAVEGACIÓN: Efecto de subrayado inteligente ═══════════════════════ */
   gsap.utils.toArray('.nav a:not(.nav-contact)').forEach(link => {
     const underline = document.createElement('span');
     underline.className = 'nav-underline';
@@ -1001,6 +1013,9 @@ function initCardHoverAnimations() {
   });
 }
 
+/**
+ * Función principal que arranca todos los módulos del sitio
+ */
 function initApp() {
   document.body.classList.remove('loading');
 
@@ -1009,7 +1024,8 @@ function initApp() {
     initParticleCanvas();
     initAurora();
     initCursorTrail();
-    initAnimations();
+    // ✅ Renderización inmediata si el preloader fue removido
+  initAnimations();
     initMouseInteractions();
     initGlassGeometry();
     initTiltEffect();
@@ -1020,7 +1036,7 @@ function initApp() {
   });
 }
 
-/* ─── 9. RESPONSIVIDAD Y ACCESIBILIDAD (gsap.matchMedia) ──────────────── */
+/* ─── 9. RESPONSIVE & ACCESIBILIDAD (gsap.matchMedia) ────────────────── */
 
 function initResponsiveAnimations() {
   const mm = gsap.matchMedia();
@@ -1057,7 +1073,8 @@ function initResponsiveAnimations() {
   );
 }
 
-/* ─── 10. PUNTO DE ENTRADA Y ARRANQUE ─────────────────────────────────── */
+/* ─── 10. ARRANQUE ────────────────────────────────────────────────────── */
+// Evento principal: Se dispara cuando el HTML está cargado y listo
 document.addEventListener('DOMContentLoaded', () => {
   renderAll();
   initApp();
