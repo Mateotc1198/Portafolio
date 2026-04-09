@@ -1,3 +1,8 @@
+/* =====================================================================
+   PORTAFOLIO — script.js (Optimizado para 60 FPS)
+   Siguiendo las mejores prácticas oficiales de GSAP y optimización web.
+   ===================================================================== */
+
 // ─── 1. REGISTRO DE PLUGINS (Se hace una sola vez para evitar errores) ────────────
 gsap.registerPlugin(ScrollTrigger);
 
@@ -503,6 +508,14 @@ function initMouseInteractions() {
     xTo(mx);
     yTo(my);
   });
+
+  // ✅ Soporte para pantallas táctiles: El foco aparece al primer toque
+  window.addEventListener('touchstart', () => {
+    if (!spotlightVisible) {
+      spotlightVisible = true;
+      gsap.to(spotlight, { autoAlpha: 1, duration: 1 });
+    }
+  }, { passive: true, once: true });
 }
 
 /* ─── 5. RENDERIZACIÓN DINÁMICA DE CONTENIDOS (HTML) ──────────────────── */
@@ -1013,6 +1026,45 @@ function initCardHoverAnimations() {
   });
 }
 
+function initMobileMenu() {
+  const toggle = document.querySelector('.nav-toggle');
+  const close = document.querySelector('.nav-close');
+  const menu = document.querySelector('.mobile-menu');
+  const links = document.querySelectorAll('.mobile-nav-link');
+
+  if (!toggle || !menu || !close) return;
+
+  const tl = gsap.timeline({ paused: true });
+
+  tl.to(menu, {
+    autoAlpha: 1,
+    duration: 0.4,
+    ease: "power2.inOut"
+  })
+    .from('.mobile-nav-link', {
+      y: 30,
+      autoAlpha: 0,
+      stagger: 0.08,
+      duration: 0.5,
+      ease: "power2.out"
+    }, "-=0.2");
+
+  toggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    tl.play();
+    document.body.style.overflow = 'hidden';
+  });
+
+  const closeMenu = (e) => {
+    if (e) e.preventDefault();
+    tl.reverse();
+    document.body.style.overflow = '';
+  };
+
+  close.addEventListener('click', closeMenu);
+  links.forEach(link => link.addEventListener('click', closeMenu));
+}
+
 /**
  * Función principal que arranca todos los módulos del sitio
  */
@@ -1024,14 +1076,12 @@ function initApp() {
     initParticleCanvas();
     initAurora();
     initCursorTrail();
-    // ✅ Renderización inmediata si el preloader fue removido
-  initAnimations();
+    initAnimations();
     initMouseInteractions();
     initGlassGeometry();
-    initTiltEffect();
+    initMobileMenu();
     initTechCardInteractions();
     initMagneticButtons();
-    initCardHoverAnimations();
     initResponsiveAnimations();
   });
 }
@@ -1048,7 +1098,7 @@ function initResponsiveAnimations() {
       reduceMotion: "(prefers-reduced-motion: reduce)"
     },
     (context) => {
-      const { isDesktop, reduceMotion } = context.conditions;
+      const { isDesktop, reduceMotion, isMobile } = context.conditions;
 
       if (reduceMotion) {
         gsap.globalTimeline.timeScale(10);
@@ -1056,6 +1106,10 @@ function initResponsiveAnimations() {
       }
 
       if (isDesktop) {
+        // Solo activamos efectos 3D de inclinación y hovers pesados en escritorio
+        initTiltEffect();
+        initCardHoverAnimations();
+
         gsap.from(".about-content", {
           scrollTrigger: {
             trigger: ".about-section",
@@ -1068,6 +1122,11 @@ function initResponsiveAnimations() {
           duration: 1.2,
           ease: "power3.out"
         });
+      }
+
+      if (isMobile) {
+        // En móvil, las secciones aparecen centradas y sin desplazamiento lateral
+        gsap.set(".about-content", { x: 0, autoAlpha: 1 });
       }
     }
   );
