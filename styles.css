@@ -16,7 +16,7 @@
 
   --progress-height: 4px;
 
-  /* Colores de marca y tecnologías */
+  /* Colores de Marca: Variables para mantener la consistencia en los iconos y acentos */
   --clr-react: #61DAFB;
   --clr-js: #F7DF1E;
   --clr-ts: #3178C6;
@@ -48,7 +48,7 @@ body {
 
 
 
-/* Barra de progreso — Uso de scaleX en lugar de width para optimizar el rendimiento en GPU */
+/* Barra de Progreso de desplazamiento — ✅ Uso de scaleX en lugar de width para que la GPU procese la animación de forma fluida */
 .scroll-progress-container {
   position: fixed;
   top: 0;
@@ -69,7 +69,7 @@ body {
   will-change: transform;
 }
 
-/* Utilidad para revelado de texto con máscara */
+/* Utilidad para revelado de texto con máscara (efecto de aparición desde abajo) */
 .mask-line {
   overflow: hidden;
   display: block;
@@ -81,7 +81,7 @@ body {
   will-change: transform;
 }
 
-/* Estado inicial para animaciones GSAP (autoAlpha maneja visibilidad y opacidad) */
+/* ✅ Estado inicial para animaciones GSAP (autoAlpha requiere visibility para evitar parpadeos) */
 .reveal-item,
 .reveal-text,
 .hero-image-wrap,
@@ -92,16 +92,16 @@ body {
   opacity: 0;
 }
 
-/* Botones con efecto magnético */
+/* Botones Magnéticos: Efecto de atracción cuando el ratón está cerca */
 .magnetic {
   display: inline-block;
   cursor: pointer;
   z-index: 1;
   will-change: transform;
-  /* Optimización para el navegador en transformaciones frecuentes */
+  /* ✅ hint al compositor para transforms frecuentes */
 }
 
-/* Fondo con resplandor ambiental */
+/* Fondo con Brillos Ambientales */
 .bg-glows {
   position: fixed;
   inset: 0;
@@ -111,7 +111,7 @@ body {
   background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 100%);
 }
 
-/* Superposición de ruido — Optimizado para reducir el área de renderizado */
+/* ✅ Superposición de Ruido: inset:0 en lugar de -200% para optimizar el dibujo en pantalla */
 .noise-overlay {
   position: fixed;
   inset: 0;
@@ -135,7 +135,7 @@ body {
   opacity: 0.5;
 }
 
-/* Foco de luz (Follower) — Tamaño reducido y posicionamiento optimizado por GPU */
+/* ✅ Spotlight (Foco de ratón): Tamaño reducido y posicionamiento por GPU para máxima suavidad */
 .mouse-spotlight {
   position: fixed;
   top: 0;
@@ -157,7 +157,7 @@ body {
   filter: blur(140px);
   opacity: 0.45;
   will-change: transform, opacity;
-  /* Aplicado solo en elementos que realmente se animan para ahorrar recursos */
+  /* ✅ Promoción a capa de GPU solo en elementos que realmente animan para ahorrar memoria */
 }
 
 .glow-1 {
@@ -184,7 +184,7 @@ body {
   left: 35%;
 }
 
-/* Nuevos glows: amber cálido + rosa frío */
+/* Brillos adicionales: Tonos ámbar y rosados para dar profundidad visual */
 .glow-4 {
   width: 45vw;
   height: 45vw;
@@ -201,7 +201,7 @@ body {
   right: 20%;
 }
 
-/* Red de partículas (Canvas) */
+/* —— Canvas de la Constelación de Partículas ————————————————————————————— */
 .particle-canvas {
   position: absolute;
   inset: 0;
@@ -211,7 +211,7 @@ body {
   pointer-events: none;
 }
 
-/* Capas de efecto Aurora boreal dinámica */
+/* —— Capas de Movimiento de Aurora ————————————————————————————————— */
 .aurora-layer {
   position: absolute;
   inset: 0;
@@ -228,7 +228,7 @@ body {
   transform-origin: center center;
 }
 
-/* Aurora 1: cyan azul amplio arriba */
+/* Aurora 1: Mezcla de cian y azul en la parte superior */
 .aurora-1 {
   width: 140vw;
   height: 55vh;
@@ -242,7 +242,7 @@ body {
   opacity: 0.8;
 }
 
-/* Aurora 2: violeta/indigo abajo derecha */
+/* Aurora 2: Tonos violetas e índigo en la parte inferior derecha */
 .aurora-2 {
   width: 110vw;
   height: 65vh;
@@ -256,7 +256,7 @@ body {
   opacity: 0.7;
 }
 
-/* Aurora 3: rosa claro centro */
+/* Aurora 3: Rosa tenue en el centro de la pantalla */
 .aurora-3 {
   width: 90vw;
   height: 70vh;
@@ -270,7 +270,7 @@ body {
   opacity: 0.6;
 }
 
-/* Aurora 4: cálido amber borde inferior izquierdo */
+/* Aurora 4: Ámbar cálido en el borde inferior izquierdo */
 .aurora-4 {
   width: 70vw;
   height: 50vh;
@@ -284,7 +284,7 @@ body {
   opacity: 0.5;
 }
 
-/* Rastro de puntos que sigue al cursor */
+/* —— Puntos de la Estela del Cursor —————————————————————————————————— */
 .cursor-trail-dot {
   position: fixed;
   top: 0;
@@ -297,7 +297,7 @@ body {
   opacity: 0;
 }
 
-/* Geometría de cristal — Sin backdrop-filter para mantener 60fps durante animaciones */
+/* Geometría de Cristal — ✅ NO usamos backdrop-filter aquí porque ralentiza el movimiento de formas */
 .glass-shapes-container {
   position: absolute;
   inset: 0;
@@ -340,7 +340,7 @@ body {
   margin: 0 auto;
 }
 
-/* Header */
+/* Cabecera (Header) */
 .header {
   position: fixed;
   top: 0;
@@ -391,7 +391,7 @@ body {
   color: var(--text-main);
 }
 
-/* Línea de subrayado animada — Generada dinámicamente por JS */
+/* Subrayado animado del menú — Se crea dinámicamente con JavaScript */
 .nav-underline {
   position: absolute;
   bottom: -3px;
@@ -412,7 +412,7 @@ body {
   border-radius: 100px;
 }
 
-/* Section Basics */
+/* Estilos Base de las Secciones */
 .section {
   padding: 120px 0;
 }
@@ -435,7 +435,7 @@ body {
   margin-bottom: 32px;
 }
 
-/* HERO ASIMÉTRICO */
+/* SECCIÓN HERO (PORTADA) */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -478,7 +478,7 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Degradado estático en caracteres para evitar repintes innecesarios */
+/* ✅ Degradado estático en caracteres — Sin animaciones CSS por letra para evitar caídas de FPS */
 .hero-title .char,
 .section-title .char,
 .contact-heading .char {
@@ -563,7 +563,7 @@ body {
   opacity: 0.1;
 }
 
-/* Cuadrícula Bento (Sobre mí) */
+/* ABOUT BENTO GRID */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1.25fr;
@@ -592,7 +592,7 @@ body {
   overflow: hidden;
   transform-style: preserve-3d;
   will-change: transform;
-  /* Efecto de inclinación 3D (tilt) con GSAP */
+  /* ✅ tilt 3D con GSAP */
 }
 
 .bento-card:hover {
@@ -609,7 +609,7 @@ body {
   gap: 16px;
 }
 
-/* Iconos de características */
+/* Iconos de Características */
 .bento-card i {
   font-size: 1.75rem;
   color: var(--accent);
@@ -628,7 +628,7 @@ body {
   color: var(--text-muted);
 }
 
-/* Tarjeta de estado de disponibilidad */
+/* Tarjeta de Estado (Disponibilidad) */
 .card-status {
   flex-direction: row;
   align-items: center;
@@ -681,12 +681,12 @@ body {
   }
 }
 
-/* Punto de estado acelerado al pasar el ratón */
+/* Status dot acelerado al hover */
 .dot-fast::after {
   animation-duration: 0.8s !important;
 }
 
-/* Pilares fundamentales */
+/* Pilares o Valores */
 .pillar-list {
   display: flex;
   flex-direction: column;
@@ -710,7 +710,7 @@ body {
   color: var(--accent);
 }
 
-/* Sección de tecnologías (Stack) */
+/* REIMAGINACIÓN DEL STACK TECNOLÓGICO */
 .tech-grid-layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -742,7 +742,7 @@ body {
   margin-top: 32px;
 }
 
-/* Transiciones específicas por propiedad para evitar "layout thrashing" */
+/* ✅ Transiciones específicas en lugar de 'all' para evitar que el navegador recalcule todo el diseño */
 .tech-card {
   display: flex;
   flex-direction: column;
@@ -754,8 +754,8 @@ body {
   border: 1px solid var(--border);
   border-radius: 16px;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-              border-color 0.4s ease,
-              box-shadow 0.4s ease;
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
   aspect-ratio: 1 / 1;
   position: relative;
   overflow: hidden;
@@ -803,7 +803,7 @@ body {
 
 
 
-/* Lista de proyectos con disposición escalonada */
+/* PROJECTS STAGGERED */
 .projects-staggered {
   display: flex;
   flex-direction: column;
@@ -820,10 +820,10 @@ body {
 
 .project-card-inner {
   display: contents;
-  /* Mantiene el diseño pero permite transformaciones internas */
+  /* preserve layout while allowing inner transforms */
 }
 
-/* Efecto de brillo y relieve en tarjetas */
+/* Card Shine & Pop-out */
 .card-shine {
   position: absolute;
   inset: 0;
@@ -864,7 +864,7 @@ body {
   object-fit: cover;
   transition: transform 0.6s ease;
   transform: scale(1.15);
-  /* Escala inicial para el efecto parallax */
+  /* Start scaled for parallax */
 }
 
 
@@ -911,7 +911,7 @@ body {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
 }
 
-/* Sección de contacto estilo Premium */
+/* CONTACT PREMIUM */
 .contact-wrap {
   padding: 100px 80px;
   background: var(--text-main);
